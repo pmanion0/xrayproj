@@ -1,0 +1,20 @@
+
+1. The project was run entirely on AWS using the Ansible for automation spinning up EC2 instances. To get the same environment, you'll need to install ansible, the EC2 boto plugins, and then launch an instance using the ./launch_aws.sh script, run setup with ./setup_aws.sh, and then tunnel onto the instance with ./tunnel_aws.sh
+
+(PS - There is an EBS snapshot that already has the x-ray image data on it that I used. I can provide you access to this, otherwise you can download the ChestX-ray8 image data from the links in the published paper)
+
+2. Start up a Jupyter Notebook instance on the EC2 cluster and then begin running the code
+
+3. The first code to run is the Pre-Process Images. This runs the image pre-processing steps and dramatically speeds up training. You can skip this, but then you'll need to update the file paths in the Train notebook to use the unprocessed image path AND add the pre-processing steps into the image transformation cells. I can help with this if needed.
+
+4. Once pre-processing is done, load up the Train Neural Network (Refactor) notebook. This is what does the neural network training. If you setup is done correctly to mirror mine, you can run this entire thing all the way to the bottom to run and output the model files for my best performing model.
+
+5. At this point, I did some UNIX work to upload data to S3 as the files were quite large. However, you can also just reorder the files in the format below so that the analysis notebook will work correctly (basically move the <TIMESTAMP>_model_<N>.tar and <TIMESTAMP>_print.txt files into a model named path as shown below)
+
+6. Next, open the Load and Analyze Neural Network notebook. I organized my model files in this waya: /user/xrayproj/output/<model_name>/model_10.tar where model_10.tar can be changed in the load_trained_model function (however almost all of mine were model_10).
+  Now, you basically just need to ensure you file path structures are correct and then you can run this all the way down through cell 56. This will evaluate all of the models in the model_type_list and store some summary metrics and AUC's. You can then slice and dice this using the code I wrote to spit out AUC's or the AUC plotting functions I created (see cell 57).
+
+This should let you recreate everything! The trickiest part is getting the setup right, and after this, it's pretty much a breeze. I am happy to help if you have questions.
+
+- Patrick
+patrickjmanion@gmail.com
